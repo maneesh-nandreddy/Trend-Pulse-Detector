@@ -78,7 +78,7 @@ export default function AlertsPage() {
                       <span className="text-[10px] text-slate-500">{i * 12} mins ago</span>
                     </div>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      "NextJs15" volume exceeded 10,000 mentions across Twitter and LinkedIn globally.
+                      &quot;NextJs15&quot; volume exceeded 10,000 mentions across Twitter and LinkedIn globally.
                     </p>
                   </div>
                 ))}

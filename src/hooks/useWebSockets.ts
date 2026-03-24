@@ -9,10 +9,9 @@ export const useWebSockets = () => {
 
   useEffect(() => {
     // Simulate WebSocket Connection delay
-    let timeout: NodeJS.Timeout;
     let interval: NodeJS.Timeout;
 
-    timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setConnectionStatus(true);
       toast.success('Connected to live data stream (Kafka via Spark)', {
         description: 'Receiving ~4.2k events/sec...',
