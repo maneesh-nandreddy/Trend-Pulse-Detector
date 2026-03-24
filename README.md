@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TrendPulse Dashboard
+
+TrendPulse is a sleek, real-time social media monitoring and trend intelligence MVP dashboard. Built for high performance and live data streaming, it uses Next.js 15, Tailwind CSS v4, shadcn/ui, Recharts, and Zustand.
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies if you haven't already:
 
-```bash
+\`\`\`bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+\`\`\`
+
+Then, run the development server:
+
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- \`src/app\`: Next.js 15 App router pages and layouts.
+- \`src/components\`: UI components including the \`shadcn/ui\` base and \`dashboard\` specifics.
+- \`src/hooks\`: Custom React hooks, including \`useWebSockets\` for real-time live data mock simulation.
+- \`src/lib/mockService.ts\`: Generates the mock data logic reflecting a Big Data Kafka/Spark backend.
+- \`src/store/useStore.ts\`: Global state management with Zustand for real-time aggregation metrics.
 
-## Learn More
+## From Mocked to Production Backend
 
-To learn more about Next.js, take a look at the following resources:
+Currently, the app relies on internal mock generators designed to simulate a massive data pipeline involving Kafka, Spark, Cassandra, Elasticsearch, and Hadoop. To hook this up to a real backend, take the following steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **WebSockets (Live Stream / Kafka)**
+   - Open \`src/hooks/useWebSockets.ts\`.
+   - Replace the \`setInterval\` mock intervals with an actual \`WebSocket\` or \`Socket.io\` connection.
+   - Example: \`const ws = new WebSocket(process.env.NEXT_PUBLIC_WS_URL)\`.
+   - On \`ws.onmessage\`, parse the payload and call \`addMention(payload)\`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **REST APIs (Cassandra / Elasticsearch metrics)**
+   - In \`src/store/useStore.ts\`, remove the \`generateInitial...\` calls inside the state instantiation.
+   - Use TanStack React Query or \`fetch\` in React Server Components to load initial KPIs and Trends from your real REST APIs.
+   - Example: Fetching \`/api/trends/top\` mapped to your Spark streaming outputs.
 
-## Deploy on Vercel
+3. **Explore Search (Elasticsearch)**
+   - Open \`src/app/explore/page.tsx\`.
+   - Instead of filtering the \`liveMentions\` in memory, implement a debounced API call to your Elasticsearch wrapper endpoint, passing the \`searchQuery\`, \`activePlatform\`, etc.
+   
+4. **Historical Reports (Hadoop/Hive)**
+   - Open \`src/app/reports/page.tsx\`.
+   - Wire the "Download PDF/CSV" buttons to trigger a query generation on your backend that interfaces with your Hadoop/Hive data warehouse infrastructure.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Specs
+* **Framework:** Next.js 15 (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS v4 + Framer Motion
+* **UI:** shadcn/ui
+* **State Management:** Zustand
+* **Charts:** Recharts
