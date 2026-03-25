@@ -43,6 +43,7 @@ export function AiInsights() {
               </button>
             )}
           </CardContent>
+          
         </Card>
       ))}
     </div>
