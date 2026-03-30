@@ -21,7 +21,6 @@ export const useStore = create<AppState>((set) => ({
   chartData: generateChartData(24),
   isConnected: false,
   
-
   addMention: (mention) => set((state) => {
     // Keep max 50 items for performance
     const newMentions = [mention, ...state.liveMentions].slice(0, 50);
